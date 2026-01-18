@@ -63,7 +63,7 @@ final shape will be (1, 20, 32)
 """
 
 import math
-from tokenization import encode, decode, vocab_size, vocab
+from tokenization import encode, decode
 import torch
 import torch.nn as nn
 from config import *
@@ -79,27 +79,20 @@ class PositionalEncoding(nn.Module):
         super().__init__()
         self.dropout = nn.Dropout(p=dropout)
 
-        # Create a matrix of [max_len, d_model] representing the positional encodings
         pe = torch.zeros(max_len, d_model)
         
-        # Create a vector of positions [0, 1, 2, ..., max_len-1]
         position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
         
-        # Calculate the division term for the sine/cosine formulas
-        # div_term = 1 / (10000 ^ (2i / d_model))
+
         div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
 
-        # Apply sine to even indices
         pe[:, 0::2] = torch.sin(position * div_term)
         
-        # Apply cosine to odd indices
         pe[:, 1::2] = torch.cos(position * div_term)
 
-        # Add a batch dimension: [1, max_len, d_model]
         pe = pe.unsqueeze(0)
 
-        # Register 'pe' as a buffer. 
-        # This means it's part of the state_dict but is NOT a learnable parameter.
+        
         self.register_buffer('pe', pe)
 
     def forward(self, x):
@@ -107,12 +100,10 @@ class PositionalEncoding(nn.Module):
         Args:
             x: Input tensor of shape (batch_size, seq_len, d_model)
         """
-        # Add the positional encoding to the input embeddings
-        # We slice self.pe to match the sequence length of x
+        
         x = x + self.pe[:, :x.size(1), :]
         return self.dropout(x)
     
-# example
 embedding_layer = nn.Embedding(num_embeddings=vocab_size, embedding_dim=EMBEDDING_DIM)
 pos_encoder = PositionalEncoding(d_model=EMBEDDING_DIM, max_len=MAX_SEQUENCE_LENGTH)
 

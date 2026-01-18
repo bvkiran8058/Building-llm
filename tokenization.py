@@ -10,19 +10,26 @@ for file in files:
         print(f"Path: {file_path} | Length: {len(content)}")
         corpus += content + '\n'
 
-vocab = list(set(corpus))
-print(sorted(vocab))
-vocab_size = len(vocab)
-print(f"Vocab size: {vocab_size}")
+special_tokens = ['<PAD>', '<UNK>']
 
+vocab = special_tokens + sorted(list(set(corpus)))
+vocab_size = len(vocab)
+print(f"Vocab Size: {vocab_size}")
 token_to_id = {token: idx for idx, token in enumerate(vocab)}
 id_to_token = {idx: token for idx, token in enumerate(vocab)}
+
 def encode(text):
-    return [token_to_id[token] for token in text]
+    return [token_to_id.get(ch, token_to_id['<UNK>']) for ch in text]
+
 def decode(token_ids):
-    return ''.join([id_to_token[token_id] for token_id in token_ids])
+    return ''.join(
+        id_to_token[token_id]
+        for token_id in token_ids
+        if id_to_token[token_id] != '<PAD>'
+    )
 
 tokens = encode("Bhisma is very wise.")
 print(f"Tokens: {tokens}")
+print(len(tokens))
 text = decode(tokens)
 print(f"Text: {text}")
