@@ -53,6 +53,16 @@ class tinyGPT(nn.Module):
         self.lm_head = nn.Linear(d_model, vocab_size)
         self.lm_head.weight = self.token_embedding.weight
 
+        self.apply(self._init_weights)
+        
+    def _init_weights(self, module):
+        if isinstance(module, nn.Linear):
+            nn.init.normal_(module.weight, mean=0.0, std=0.02)
+            if module.bias is not None:
+                nn.init.zeros_(module.bias)
+        elif isinstance(module, nn.Embedding):
+            nn.init.normal_(module.weight, mean=0.0, std=0.02)
+
     def forward(self, idx):
         batch_size, seq_len = idx.shape
         

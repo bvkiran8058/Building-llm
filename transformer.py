@@ -59,7 +59,7 @@ class TransformerBlock(nn.Module):
         
         residual = x 
         
-        x, _ = self.self_attn(q=x, k=x, v=x, mask=mask)
+        x = self.self_attn(q=x, k=x, v=x, mask=mask)
         x = self.dropout1(x)
 
         x = self.norm1(x + residual)

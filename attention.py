@@ -41,7 +41,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, d_model, num_heads):
+    def __init__(self, d_model, num_heads, dropout=0.1):
         super().__init__()
         self.d_model = d_model 
         self.num_heads = num_heads 
@@ -53,7 +53,8 @@ class MultiHeadAttention(nn.Module):
         self.w_k = nn.Linear(d_model, d_model) 
         self.w_v = nn.Linear(d_model, d_model) 
 
-        self.w_o = nn.Linear(d_model, d_model) 
+        self.w_o = nn.Linear(d_model, d_model)
+        self.dropout = nn.Dropout(dropout) 
 
     def scaled_dot_product_attention(self, Q, K, V, mask=None):
 
