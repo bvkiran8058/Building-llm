@@ -1,6 +1,6 @@
 import os
 from natsort import natsorted
-folder_path = r"Mahabharatha Datasets"
+folder_path = "Mahabharatha Datasets"
 files = natsorted(os.listdir(folder_path))
 corpus = ''
 for file in files:
@@ -9,9 +9,9 @@ for file in files:
         content = f.read() 
         print(f"Path: {file_path} | Length: {len(content)}")
         corpus += content + '\n'
+print(f"Total corpus length: {len(corpus)}")
 
 special_tokens = ['<PAD>', '<UNK>']
-
 vocab = special_tokens + sorted(list(set(corpus)))
 vocab_size = len(vocab)
 print(f"Vocab Size: {vocab_size}")

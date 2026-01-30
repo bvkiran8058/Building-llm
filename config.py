@@ -3,7 +3,7 @@ from tokenization import vocab_size, vocab
 
 BATCH_SIZE = 16
 LEARNING_RATE = 3e-4
-NUM_EPOCHS = 10
+NUM_EPOCHS = 25
 GRAD_CLIP = 1.0
 EVAL_INTERVAL = 500
 SAVE_INTERVAL = 1000
